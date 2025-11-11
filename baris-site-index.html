@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benimle Barışır Mısın? 💕</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffd6e0, #e0bbff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', 'Comic Sans MS', cursive;
+      color: #5b2c6f;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      color: #ff4d6d;
+      animation: floatUp linear infinite;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.6); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 2rem;
+      width: 90%;
+      max-width: 350px;
+      z-index: 10;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      margin-bottom: 0.8rem;
+      color: #d63384;
+      text-shadow: 1px 1px #fff;
+    }
+
+    p {
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      margin-bottom: 1rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 0.8rem 1.4rem;
+      border-radius: 15px;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .yes {
+      background: #ff85a1;
+      color: white;
+      box-shadow: 0 4px 10px rgba(255, 133, 161, 0.4);
+    }
+
+    .no {
+      background: #fff0f5;
+      color: #d63384;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .yes:hover { transform: scale(1.1); }
+    .no:hover { transform: rotate(-5deg) scale(1.05); }
+
+    .message {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #8e44ad;
+      min-height: 1.6rem;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 192, 203, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 1000;
+      color: #fff;
+      animation: fade 1s ease forwards;
+      overflow: hidden;
+    }
+
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .overlay h2 {
+      font-size: clamp(1.6rem, 5vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    .overlay p {
+      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      opacity: 0;
+      animation: appear 2s ease forwards 1s;
+    }
+
+    @keyframes appear { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+    .heart {
+      position: absolute;
+      color: #ff4d6d;
+      font-size: 1.5rem;
+      animation: explode 2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes explode {
+      0% { transform: scale(0.3) translate(0, 0); opacity: 1; }
+      100% { transform: scale(2) translate(var(--x), var(--y)); opacity: 0; }
+    }
+
+    /* imza */
+    .signature {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-style: italic;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Benimle barışır mısın? 💖</h1>
+    <p>Bak hâlâ seni çok seviyorum... 💕</p>
+
+    <div class="buttons">
+      <button class="yes" id="yesBtn">Evet 💞</button>
+      <button class="no" id="noBtn">Hayır 🙈</button>
+    </div>
+
+    <div class="message" id="hint"></div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <h2>Seni seviyorum 💞</h2>
+    <p>Kalbim hep seninle... 💘</p>
+  </div>
+
+  <div class="signature">by Ertuğrul 💗</div>
+
+  <script>
+    const noMessages = [
+      'Emin misin tatlım? 🥺',
+      'Bir daha düşün, lütfen 💗',
+      'Yanlış bastın bence 😳',
+      'Kalbimi kırma nolur 😭',
+      'Tamam ama seni hâlâ çok seviyorum 😢'
+    ];
+
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const hint = document.getElementById('hint');
+    const overlay = document.getElementById('overlay');
+
+    let step = 0;
+
+    noBtn.addEventListener('click', () => {
+      hint.textContent = noMessages[step] || 'Artık pes ettim 😅';
+      step++;
+      yesBtn.style.transform = `scale(${1 + step * 0.4})`;
+      if (step > 4) {
+        noBtn.disabled = true;
+        hint.textContent = 'Tamam, artık kalbini dinle 💞';
+      }
+    });
+
+    yesBtn.addEventListener('click', () => {
+      overlay.style.display = 'flex';
+      for (let i = 0; i < 40; i++) {
+        createHeart();
+      }
+    });
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = '💖';
+      heart.style.left = '50%';
+      heart.style.top = '50%';
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = 150 + Math.random() * 100;
+      heart.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
+      heart.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 2000);
+    }
+
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('floating-heart');
+      heart.textContent = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (0.8 + Math.random() * 1.8) + 'rem';
+      heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    setInterval(createFloatingHeart, 400);
+  </script>
+</body>
+</html>
